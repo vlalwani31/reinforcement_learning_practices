@@ -56,5 +56,59 @@ def initial_population():
     print('Median accepted_score: ', statistics.median(accepted_score))
     return training_data
 
-initial_population()
+def NNmodel(input_size):
+    regressor = Sequential()
+    regressor.add(Dense(units = 128, input_dim = input_size, activation='relu'))
+    regressor.add(Dropout(0.25))
+    regressor.add(Dense(units = 192, activation='relu'))
+    regressor.add(Dropout(0.25))
+    regressor.add(Dense(units = 256, activation='relu'))
+    regressor.add(Dropout(0.25))
+    regressor.add(Dense(units = 192, activation='relu'))
+    regressor.add(Dropout(0.25))
+    regressor.add(Dense(units = 128, activation='relu'))
+    regressor.add(Dropout(0.25))
+    regressor.add(Dense(units = 2, activation='softmax'))
+    regressor.compile(optimizer='adam', loss='categorical_crossentropy',metrics=['mae','accuracy'])
+    return regressor
+
+def train_NNmodel(training_data, model=False):
+    X = np.array([i[0] for i in training_data]).reshape(-1, len(training_data[0][0]))
+    Y = np.array([i[1] for i in training_data])
+    print(X.shape)
+    print(Y.shape)
+    if not model:
+        model = NNmodel(len(X[0]))
+
+    model.fit(x= X,y= Y, epochs = 5, steps_per_epoch = 500)
+    return model
+
+training_data = initial_population()
+model = train_NNmodel(training_data)
+
+scores = []
+choices = []
+for each_game in range(10):
+    score = 0
+    game_memory = []
+    previous_observartion = []
+    env.reset()
+    for _ in range(goal_steps):
+        env.render()
+        if(len(previous_observartion) == 0):
+            action = env.action_space.sample()
+        else:
+            action = np.argmax(model.predict(np.array(previous_observartion).reshape(-1, len(previous_observartion))))
+        choices.append(action)
+        new_observation, reward, done, _ = env.step(action)
+        previous_observartion = new_observation
+        #game_memory.append([new_observation, action)
+        score += reward
+        if done:
+            break
+    scores.append(score)
+
+print('Average Score:',sum(scores)/len(scores))
+print('choice 1:{}  choice 0:{}'.format(choices.count(1)/len(choices),choices.count(0)/len(choices)))
+
 env.close()
