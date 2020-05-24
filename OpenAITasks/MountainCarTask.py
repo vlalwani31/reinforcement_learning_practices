@@ -2,6 +2,7 @@ import gym
 import random
 import statistics
 import numpy as np
+import pickle
 
 pos_space = np.linspace(-1.2,0.6,20)
 vel_space = np.linspace(-0.07,0.07,20)
@@ -54,6 +55,8 @@ def mountain_trial():
         total_rewards[i] = score
         epsilon_value = epsilon_value - (1.4/number_of_games) if (epsilon_value > 0.01) else 0.01
 
+    with open('savedparameters/mountaincarQ.pkl','wb') as f:
+        pickle.dump(Q,f,pickle.HIGHEST_PROTOCOL)
     observation = env.reset()
     state = get_state(observation)
     done = False
