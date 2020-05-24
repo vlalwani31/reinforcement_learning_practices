@@ -1,4 +1,5 @@
 import gym
+import random
 import statistics
 import numpy as np
 from keras.models import Sequential
