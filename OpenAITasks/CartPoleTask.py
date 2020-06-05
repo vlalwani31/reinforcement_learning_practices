@@ -52,7 +52,7 @@ def initial_population():
         env.reset()
         scores.append(score)
     training_data_save = np.array(training_data)
-    np.save('saved.npy', training_data_save)
+    np.save('./savedparameters/saved.npy', training_data_save)
     print('Average accepted_score: ', statistics.mean(accepted_score))
     print('Median accepted_score: ', statistics.median(accepted_score))
     return training_data
