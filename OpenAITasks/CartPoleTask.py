@@ -81,7 +81,7 @@ def train_NNmodel(training_data, model=False):
     if not model:
         model = NNmodel(len(X[0]))
 
-    model.fit(x= X,y= Y, epochs = 5, steps_per_epoch = 500)
+    model.fit(x= X,y= Y, epochs = 5, steps_per_epoch = 4)
     return model
 
 training_data = initial_population()
