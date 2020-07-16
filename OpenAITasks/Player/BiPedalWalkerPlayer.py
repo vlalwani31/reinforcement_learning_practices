@@ -12,12 +12,15 @@ env = gym.make('BipedalWalker-v3')
 done = False
 observation = env.reset()
 score = 0
+all_scores = []
 while not done:
     env.render()
     action = runner.predict(np.array(observation).reshape(-1, len(observation)))[0]
     observation, reward, done, _ = env.step(action)
     score += reward
+    all_scores.append(reward)
 print('Final Score is: ', score)
+print('All the rewards are: \n', all_scores)
 
 env.close()
 print(int(9/10))
