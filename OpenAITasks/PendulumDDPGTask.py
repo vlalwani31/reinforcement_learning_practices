@@ -112,14 +112,14 @@ def get_actor():
     # Initialize weights between -3e-3 and 3-e3
     initializer = initializers.RandomUniform(minval=-3e-3, maxval=3e-3)
     #last_init = tf.keras.initializers.RandomUniform(minval=-0.003, maxval=0.003)
-    inputs = layers.Input(shape=(num_states,))
+    inputs = layers.Input(shape=(3,))
     out = layers.Dense(400,activation='relu')(inputs)
     out = layers.BatchNormalization()(out)
     out = layers.Dense(300,activation='relu')(out)
     out = layers.BatchNormalization()(out)
-    outputs = layers.Dense(num_actions,activation='tanh',kernel_initializer=initializer)(out)
+    outputs = layers.Dense(1,activation='tanh',kernel_initializer=initializer)(out)
     # The upper_bound is 2.0 for Pendulum
-    outputs = layers.Lambda(lambda x: x*upper_bound)(outputs)
+    outputs = layers.Lambda(lambda x: x*2.0)(outputs)
     #outputs = outputs * upper_bound
 
     model = models.Model(inputs, outputs)
@@ -127,14 +127,14 @@ def get_actor():
 
 def get_critic():
     # Using States as Input
-    state_input = layers.Input(shape=(num_states,))
+    state_input = layers.Input(shape=(3,))
     state_out = layers.Dense(16,activation='relu')(state_input)
     state_out = layers.BatchNormalization()(state_out)
     state_out = layers.Dense(32,activation='relu')(state_out)
     state_out = layers.BatchNormalization()(state_out)
 
     # Including Actions as Input
-    action_input = layers.Input(shape=(num_actions,))
+    action_input = layers.Input(shape=(1,))
     action_out = layers.Dense(32,activation='relu')(action_input)
     action_out = layers.BatchNormalization()(action_out)
 
