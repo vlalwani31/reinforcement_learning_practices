@@ -1,26 +1,19 @@
 import gym
+import tensorflow as tf
+from tensorflow.keras import layers, initializers, models, backend
 import numpy as np
-from keras.models import Sequential
-from keras.layers.core import Activation, Dropout, Dense
-from keras.optimizers import Adam
-from keras.models import load_model
 
-#model.load("../savedparameters/BipedalWalkermodel.h5")
-runner = load_model("../savedparameters/BipedalWalkermodel.h5")
+runner = models.load_model("../savedparameters/BiPedalWalker_DDPG/Best_actor_model.h5")
 runner.summary()
 env = gym.make('BipedalWalker-v3')
 done = False
 observation = env.reset()
 score = 0
-all_scores = []
 while not done:
     env.render()
-    action = runner.predict(np.array(observation).reshape(-1, len(observation)))[0]
-    observation, reward, done, _ = env.step(action)
+    action = runner.predict((np.array(observation).reshape(1,24)))
+    #print(action[0])
+    observation, reward, done, _ = env.step(action[0])
     score += reward
-    all_scores.append(reward)
 print('Final Score is: ', score)
-print('All the rewards are: \n', all_scores)
-
 env.close()
-print(int(9/10))
