@@ -1,4 +1,5 @@
 import gym
+import random
 import statistics
 import numpy as np
 from keras.models import Sequential
@@ -51,7 +52,7 @@ def initial_population():
         env.reset()
         scores.append(score)
     training_data_save = np.array(training_data)
-    np.save('saved.npy', training_data_save)
+    np.save('./savedparameters/saved.npy', training_data_save)
     print('Average accepted_score: ', statistics.mean(accepted_score))
     print('Median accepted_score: ', statistics.median(accepted_score))
     return training_data
@@ -80,7 +81,7 @@ def train_NNmodel(training_data, model=False):
     if not model:
         model = NNmodel(len(X[0]))
 
-    model.fit(x= X,y= Y, epochs = 5, steps_per_epoch = 500)
+    model.fit(x= X,y= Y, epochs = 5, steps_per_epoch = 4)
     return model
 
 training_data = initial_population()
